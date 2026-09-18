@@ -91,61 +91,33 @@ db.collection("baterias").onSnapshot((snapshot) => {
   renderAll();
 });
 
-function getEquipesWithScores() {
-  const scoreMap = {};
-  equipes.forEach((eq) => {
-    scoreMap[eq.id] = 0;
-  });
-
-  baterias.forEach((bateria) => {
-    const scores = bateria.scores || {};
-    Object.entries(scores).forEach(([equipeId, pts]) => {
-      if (scoreMap[equipeId] !== undefined) {
-        scoreMap[equipeId] += Number(pts) || 0;
-      }
-    });
-  });
-
-  return equipes.map((eq) => ({
-    ...eq,
-    score: scoreMap[eq.id] || 0
-  }));
-}
-
-function renderEquipesRanking() {
+function renderEquipesList() {
   equipesRankingList.innerHTML = "";
-  const equipesComPontos = getEquipesWithScores().sort((a, b) => b.score - a.score);
 
-  if (equipesComPontos.length === 0) {
+  if (equipes.length === 0) {
     equipesRankingList.innerHTML = '<li class="empty-msg">Nenhuma equipe cadastrada.</li>';
     return;
   }
 
-  let currentRank = 1;
-
-  equipesComPontos.forEach((eq, index) => {
-    if (index > 0 && eq.score < equipesComPontos[index - 1].score) {
-      currentRank = index + 1;
-    }
-
-    let rankClass = "";
-    if (currentRank === 1) rankClass = "rank-1";
-    else if (currentRank === 2) rankClass = "rank-2";
-    else if (currentRank === 3) rankClass = "rank-3";
-
+  equipes.forEach((eq) => {
     const li = document.createElement("li");
     li.innerHTML = `
       <div class="item-info">
-        <span class="position ${rankClass}">${currentRank}º</span>
         <span class="name">${eq.name}</span>
       </div>
-      <div class="score-controls">
-        <span class="score-value">${eq.score} pts</span>
-        ${isAdmin ? `<button class="btn-delete" title="Excluir equipe" onclick="removeEquipe('${eq.id}')">✕</button>` : ""}
-      </div>
+      ${isAdmin ? `<button class="btn-delete" title="Excluir equipe" onclick="removeEquipe('${eq.id}')">✕</button>` : ""}
     `;
     equipesRankingList.appendChild(li);
   });
+}
+
+function getRankedEquipesForScores(scores = {}) {
+  return equipes
+    .map((eq) => ({
+      ...eq,
+      pontos: Number(scores[eq.id]) || 0
+    }))
+    .sort((a, b) => b.pontos - a.pontos || a.name.localeCompare(b.name));
 }
 
 function renderRegataTimesList() {
@@ -190,22 +162,20 @@ function renderHistorico() {
       card.className = `historico-card ${isBeingEdited ? "editing" : ""}`;
 
       let resultadosHtml = "";
-      const scores = bateria.scores || {};
+      const rankedScores = getRankedEquipesForScores(bateria.scores || {})
+        .filter((eq) => eq.pontos > 0);
 
-      Object.entries(scores).forEach(([equipeId, pts]) => {
-        if (Number(pts) > 0) {
-          const equipe = equipes.find((eq) => eq.id === equipeId);
-          const nome = equipe ? equipe.name : "Equipe removida";
+      if (rankedScores.length > 0) {
+        rankedScores.forEach((eq, index) => {
+          const rankClass = index === 0 ? "rank-1" : index === 1 ? "rank-2" : index === 2 ? "rank-3" : "";
           resultadosHtml += `
             <div class="hist-item-row">
-              <span>${nome}:</span>
-              <strong>+${pts} pts</strong>
+              <span><span class="position ${rankClass}">${index + 1}º</span> ${eq.name}:</span>
+              <strong>${eq.pontos} pts</strong>
             </div>
           `;
-        }
-      });
-
-      if (!resultadosHtml) {
+        });
+      } else {
         resultadosHtml = '<div class="hist-item-row"><i>Nenhum ponto registrado.</i></div>';
       }
 
@@ -227,7 +197,7 @@ function renderHistorico() {
 }
 
 function renderAll() {
-  renderEquipesRanking();
+  renderEquipesList();
   renderRegataTimesList();
   renderHistorico();
 }

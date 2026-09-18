@@ -57,6 +57,18 @@ body {
   align-items: flex-start;
 }
 
+body:not(.is-admin) .layout-wrapper {
+  display: block;
+}
+
+body:not(.is-admin) .col-equipes {
+  display: none;
+}
+
+body:not(.is-admin) .col-baterias {
+  width: 100%;
+}
+
 .col-equipes, .col-baterias {
   width: 50%;
   background: #ffffff;
@@ -176,7 +188,7 @@ li:last-child { border-bottom: none; }
   margin-top: 15px;
   border-top: none;
   padding-top: 12px;
-  max-height: 380px;
+  max-height: 600px;
   overflow-y: auto;
 }
 body.is-admin .historico-container { border-top: 2px dashed #e5e7eb; }
