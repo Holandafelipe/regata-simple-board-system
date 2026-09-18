@@ -42,7 +42,7 @@ auth.onAuthStateChanged((user) => {
   document.body.classList.toggle("is-admin", isAdmin);
 
   if (isAdmin) {
-    authStatusText.innerHTML = `<span class="badge-status badge-admin">Conectado: ${user.email} (Admin)</span>`;
+    authStatusText.innerHTML = `<span class="badge-status badge-admin">Conectado: ${user.email}</span>`;
     btnOpenLogin.style.display = "none";
     btnLogout.style.display = "inline-flex";
   } else {
