@@ -14,6 +14,7 @@ body {
   width: 100%;
   max-width: 1550px;
   display: flex;
+  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
@@ -22,6 +23,21 @@ body {
   padding: 10px 16px;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.auth-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 176px;
+  height: 142px;
+  object-fit: contain;
+  align-self: center;
+  margin: 0px auto 0px 0;
 }
 
 .badge-status {
