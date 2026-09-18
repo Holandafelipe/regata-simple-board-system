@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistema de Ranking Náutico - Baterias, Histórico & Equipes</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Barra de Autenticação -->
   <div class="top-auth-bar">
     <div id="authStatusText">
       <span class="badge-status badge-viewer">Modo Visitante (Somente Leitura)</span>
@@ -18,58 +16,41 @@
   </div>
 
   <div class="layout-wrapper">
-    <!-- COLUNA 1: EQUIPES -->
     <div class="col-equipes">
       <h2>🏆 Ranking das Equipes</h2>
+
       <div class="form-group admin-only">
         <input type="text" id="equipeNameInput" class="input-flex" placeholder="Nome da equipe (ex: Equipe 1)..." />
         <button class="btn-add" id="btnAddEquipe">+ Equipe</button>
       </div>
+
       <ul id="equipesRankingList"></ul>
     </div>
 
-    <!-- COLUNA 2: TIMES & CATEGORIAS -->
-    <div class="col-times">
-      <h2>👥 Pontuação das Categorias</h2>
-      <div class="form-group admin-only">
-        <select id="selectEquipe" class="input-flex">
-          <option value="" disabled selected>Selecione a equipe...</option>
-        </select>
-        <select id="selectCategoria">
-          <option value="todos">⚡ Todos (Cria todas)</option>
-          <option value="sub-26">Sub-26</option>
-          <option value="misto">Misto</option>
-          <option value="senior">Sênior</option>
-          <option value="feminino">Feminino</option>
-          <option value="veterano">Veterano</option>
-        </select>
-        <button class="btn-add" id="btnAddTime">+ Time</button>
-      </div>
-      <ul id="timesList"></ul>
-    </div>
-
-    <!-- COLUNA 3: BATERIAS & HISTÓRICO -->
     <div class="col-baterias">
-      <h2>⛵ Lançamento de Baterias</h2>
+      <div class="admin-launch-section">
+        <h2>⛵ Lançamento de Baterias</h2>
 
-      <div class="bateria-header-box admin-only-block admin-only">
-        <label for="regataNomeInput">Identificação da Bateria:</label>
-        <input type="text" id="regataNomeInput" placeholder="Ex: Bateria 1..." style="width: 100%; margin-bottom: 8px;" />
-        <label for="selectRegataCategoria">Categoria da Bateria:</label>
-        <select id="selectRegataCategoria" style="width: 100%;">
-          <option value="sub-26">Bateria Sub-26</option>
-          <option value="misto">Bateria Misto</option>
-          <option value="senior">Bateria Sênior</option>
-          <option value="feminino">Bateria Feminino</option>
-          <option value="veterano">Bateria Veterano</option>
-        </select>
-      </div>
+        <div class="bateria-header-box admin-only-block admin-only">
+          <label for="regataNomeInput">Identificação da Bateria:</label>
+          <input type="text" id="regataNomeInput" placeholder="Ex: Bateria 1..." style="width: 100%; margin-bottom: 8px;" />
 
-      <ul id="regataTimesList"></ul>
+          <label for="selectRegataCategoria">Tipo da Bateria:</label>
+          <select id="selectRegataCategoria" style="width: 100%;">
+            <option value="sub-26">Sub 26</option>
+            <option value="misto">Misto</option>
+            <option value="feminino">Feminino</option>
+            <option value="senior">Sênior</option>
+            <option value="veterano">Veterano</option>
+          </select>
+        </div>
 
-      <div class="admin-only-block admin-only" style="width: 100%;">
-        <button id="btnSalvarRegata" class="btn-save-bateria">💾 Salvar Resultado da Bateria</button>
-        <button id="btnCancelEdit" class="btn-cancel-edit">Cancelar Edição</button>
+        <ul id="regataTimesList"></ul>
+
+        <div class="admin-only-block admin-only" style="width: 100%;">
+          <button id="btnSalvarRegata" class="btn-save-bateria">💾 Salvar Resultado da Bateria</button>
+          <button id="btnCancelEdit" class="btn-cancel-edit">Cancelar Edição</button>
+        </div>
       </div>
 
       <div class="historico-container">
@@ -79,7 +60,6 @@
     </div>
   </div>
 
-  <!-- Modal Simples de Login -->
   <div id="loginModal" class="modal-overlay">
     <div class="modal-card">
       <h3 style="margin-top: 0;">Acesso Administrativo</h3>
@@ -92,9 +72,9 @@
     </div>
   </div>
 
-  <script type="module" src="script.js"></script>
-</body>
-</html>
-  <script type="module" src="script.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
