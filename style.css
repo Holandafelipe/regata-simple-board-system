@@ -1,0 +1,182 @@
+* { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+body {
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Barra Superior de Autenticação */
+.top-auth-bar {
+    width: 100%;
+    max-width: 1550px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    background: #ffffff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.user-info { font-size: 0.85rem; font-weight: 600; color: #4b5563; }
+.badge-status {
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.badge-admin { background-color: #dcfce7; color: #166534; }
+.badge-viewer { background-color: #f3f4f6; color: #6b7280; }
+
+.layout-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 1550px;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.col-equipes { width: 40%; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.col-times   { width: 30%; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.col-baterias{ width: 30%; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+h2 { margin-top: 0; margin-bottom: 16px; font-size: 1.25rem; color: #1f2937; display: flex; align-items: center; gap: 8px; }
+h3 { font-size: 1.05rem; margin: 20px 0 10px 0; color: #374151; display: flex; align-items: center; justify-content: space-between; }
+
+.form-group { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+input[type="text"], input[type="email"], input[type="password"], select {
+    padding: 9px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    outline: none;
+    font-size: 0.9rem;
+    background: #fff;
+}
+input:focus, select:focus { border-color: #2563eb; }
+.input-flex { flex: 1; min-width: 130px; }
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    gap: 4px;
+}
+button:hover { opacity: 0.88; }
+button:active { transform: scale(0.98); }
+
+.btn-add { background-color: #2563eb; color: white; white-space: nowrap; }
+.btn-save-bateria { background-color: #16a34a; color: white; width: 100%; margin-top: 14px; padding: 11px; font-size: 0.95rem; }
+.btn-cancel-edit { background-color: #6b7280; color: white; width: 100%; margin-top: 6px; padding: 8px; font-size: 0.85rem; display: none; }
+.btn-score { padding: 4px 10px; font-size: 0.95rem; background-color: #e5e7eb; color: #111; border-radius: 4px; }
+.btn-delete { background-color: #fee2e2; color: #dc2626; padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; margin-left: 6px; }
+.btn-action-sm { padding: 3px 7px; font-size: 0.75rem; border-radius: 4px; }
+.btn-edit-hist { background-color: #f3f4f6; color: #1f2937; border: 1px solid #d1d5db; }
+.btn-login { background-color: #2563eb; color: #ffffff; }
+.btn-logout { background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+
+ul { list-style: none; padding: 0; margin: 0; }
+li { display: flex; align-items: center; justify-content: space-between; padding: 10px 8px; border-bottom: 1px solid #f3f4f6; }
+li:last-child { border-bottom: none; }
+
+.item-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+.position { font-weight: 700; color: #4b5563; min-width: 28px; font-size: 1rem; }
+.rank-1 { color: #d97706; }
+.rank-2 { color: #64748b; }
+.rank-3 { color: #b45309; }
+
+.name { font-weight: 600; color: #111827; font-size: 0.95rem; word-break: break-word; }
+.team-details { display: flex; flex-direction: column; }
+.badge-category {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background-color: #e0e7ff;
+    color: #3730a3;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-top: 2px;
+    width: fit-content;
+    text-transform: capitalize;
+}
+
+.score-controls { display: flex; align-items: center; gap: 6px; }
+.score-value { font-weight: 700; font-size: 1.05rem; min-width: 28px; text-align: center; }
+
+.bateria-header-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+.bateria-header-box label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #475569;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.historico-container {
+    margin-top: 15px;
+    border-top: 2px dashed #e5e7eb;
+    padding-top: 12px;
+    max-height: 380px;
+    overflow-y: auto;
+}
+.historico-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+}
+.historico-card.editing { border-color: #2563eb; background: #eff6ff; }
+.hist-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.hist-card-title { font-weight: 700; font-size: 0.9rem; color: #1e293b; }
+.hist-card-actions { display: flex; gap: 4px; }
+.hist-item-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: #475569; padding: 2px 0; }
+.empty-msg { text-align: center; color: #9ca3af; padding: 16px 8px; font-size: 0.85rem; }
+
+/* Modal de Login */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-card {
+    background: white;
+    padding: 24px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Controle de Acesso Admin vs Visitante */
+.admin-only { display: none !important; }
+body.is-admin .admin-only { display: flex !important; }
+body.is-admin .admin-only-inline { display: inline-flex !important; }
+body.is-admin .admin-only-block { display: block !important; }
+
+@media (max-width: 1024px) {
+    .layout-wrapper { flex-direction: column; }
+    .col-equipes, .col-times, .col-baterias { width: 100%; }
+}
