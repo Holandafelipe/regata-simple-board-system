@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistema de Ranking Náutico - Baterias, Histórico & Equipes</title>
+  <title>SISREGATA</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.png">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="top-auth-bar">
-    <!-- <img class="brand-logo" src="logo.png" alt="Logo da regata" onerror="this.hidden = true" /> -->
     <div class="auth-actions">
       <div id="authStatusText">
         <span class="badge-status badge-viewer">Modo Visitante (Somente Leitura)</span>
@@ -19,8 +19,8 @@
   </div>
 
   <div class="layout-wrapper">
-    <div class="col-equipes">
-      <h2>🏆 Ranking das Equipes</h2>
+    <div class="admin-only admin-only-block col-equipes">
+      <h2>🏆 Cadastro de Equipes</h2>
 
       <div class="form-group admin-only">
         <input type="text" id="equipeNameInput" class="input-flex" placeholder="Nome da equipe (ex: Equipe 1)..." />
@@ -57,7 +57,7 @@
       </div>
 
       <div class="historico-container">
-        <h3>📜 Histórico de Baterias</h3>
+        <h2>📜 Histórico de Baterias</h2>
         <div id="historicoList"></div>
       </div>
     </div>

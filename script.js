@@ -91,61 +91,38 @@ db.collection("baterias").onSnapshot((snapshot) => {
   renderAll();
 });
 
-function getEquipesWithScores() {
-  const scoreMap = {};
-  equipes.forEach((eq) => {
-    scoreMap[eq.id] = 0;
-  });
-
-  baterias.forEach((bateria) => {
-    const scores = bateria.scores || {};
-    Object.entries(scores).forEach(([equipeId, pts]) => {
-      if (scoreMap[equipeId] !== undefined) {
-        scoreMap[equipeId] += Number(pts) || 0;
-      }
-    });
-  });
-
-  return equipes.map((eq) => ({
-    ...eq,
-    score: scoreMap[eq.id] || 0
-  }));
-}
-
-function renderEquipesRanking() {
+function renderEquipesList() {
   equipesRankingList.innerHTML = "";
-  const equipesComPontos = getEquipesWithScores().sort((a, b) => b.score - a.score);
 
-  if (equipesComPontos.length === 0) {
+  if (equipes.length === 0) {
     equipesRankingList.innerHTML = '<li class="empty-msg">Nenhuma equipe cadastrada.</li>';
     return;
   }
 
-  let currentRank = 1;
-
-  equipesComPontos.forEach((eq, index) => {
-    if (index > 0 && eq.score < equipesComPontos[index - 1].score) {
-      currentRank = index + 1;
-    }
-
-    let rankClass = "";
-    if (currentRank === 1) rankClass = "rank-1";
-    else if (currentRank === 2) rankClass = "rank-2";
-    else if (currentRank === 3) rankClass = "rank-3";
-
+  equipes.forEach((eq) => {
     const li = document.createElement("li");
     li.innerHTML = `
       <div class="item-info">
-        <span class="position ${rankClass}">${currentRank}º</span>
         <span class="name">${eq.name}</span>
       </div>
-      <div class="score-controls">
-        <span class="score-value">${eq.score} pts</span>
-        ${isAdmin ? `<button class="btn-delete" title="Excluir equipe" onclick="removeEquipe('${eq.id}')">✕</button>` : ""}
-      </div>
+      ${isAdmin ? `<button class="btn-delete" title="Excluir equipe" onclick="removeEquipe('${eq.id}')">✕</button>` : ""}
     `;
     equipesRankingList.appendChild(li);
   });
+}
+
+function getRankedEquipesForScores(scores = {}) {
+  return equipes
+    .map((eq) => ({
+      ...eq,
+      pontos: Number(scores[eq.id]) || 0
+    }))
+    .sort((a, b) => {
+      if (b.pontos !== a.pontos) {
+        return b.pontos - a.pontos;
+      }
+      return a.name.localeCompare(b.name, "pt-BR");
+    });
 }
 
 function renderRegataTimesList() {
@@ -190,22 +167,33 @@ function renderHistorico() {
       card.className = `historico-card ${isBeingEdited ? "editing" : ""}`;
 
       let resultadosHtml = "";
-      const scores = bateria.scores || {};
+      const rankedScores = getRankedEquipesForScores(bateria.scores || {});
 
-      Object.entries(scores).forEach(([equipeId, pts]) => {
-        if (Number(pts) > 0) {
-          const equipe = equipes.find((eq) => eq.id === equipeId);
-          const nome = equipe ? equipe.name : "Equipe removida";
+      if (rankedScores.length > 0) {
+        let currentRank = 1;
+        let previousScore = null;
+
+        rankedScores.forEach((eq, index) => {
+          const currentScore = eq.pontos;
+
+          if (index === 0) {
+            previousScore = currentScore;
+          } else if (currentScore !== previousScore){
+            currentRank += 1
+            previousScore = currentScore;
+          }
+
+          const rankNumber = currentRank;
+          const rankClass = rankNumber === 1 ? "rank-1" : rankNumber === 2 ? "rank-2" : rankNumber === 3 ? "rank-3" : "";
+
           resultadosHtml += `
             <div class="hist-item-row">
-              <span>${nome}:</span>
-              <strong>+${pts} pts</strong>
+              <span><span class="position ${rankClass}">${rankNumber}º</span> ${eq.name}:</span>
+              <strong>${eq.pontos} pts</strong>
             </div>
           `;
-        }
-      });
-
-      if (!resultadosHtml) {
+        });
+      } else {
         resultadosHtml = '<div class="hist-item-row"><i>Nenhum ponto registrado.</i></div>';
       }
 
@@ -227,7 +215,7 @@ function renderHistorico() {
 }
 
 function renderAll() {
-  renderEquipesRanking();
+  renderEquipesList();
   renderRegataTimesList();
   renderHistorico();
 }
@@ -265,6 +253,7 @@ function resetRegataForm() {
   btnSalvarRegata.textContent = "💾 Salvar Resultado da Bateria";
   btnSalvarRegata.style.backgroundColor = "#16a34a";
   btnCancelEdit.style.display = "none";
+  renderRegataTimesList();
 }
 
 btnCancelEdit.addEventListener("click", () => {
@@ -298,6 +287,7 @@ btnSalvarRegata.addEventListener("click", async () => {
 
   await db.collection("baterias").doc(docId).set(payload);
   resetRegataForm();
+  renderRegataTimesList();
 });
 
 window.removeEquipe = async (equipeId) => {
