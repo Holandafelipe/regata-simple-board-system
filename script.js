@@ -117,7 +117,12 @@ function getRankedEquipesForScores(scores = {}) {
       ...eq,
       pontos: Number(scores[eq.id]) || 0
     }))
-    .sort((a, b) => b.pontos - a.pontos || a.name.localeCompare(b.name));
+    .sort((a, b) => {
+      if (b.pontos !== a.pontos) {
+        return b.pontos - a.pontos;
+      }
+      return a.name.localeCompare(b.name, "pt-BR");
+    });
 }
 
 function renderRegataTimesList() {
@@ -162,15 +167,28 @@ function renderHistorico() {
       card.className = `historico-card ${isBeingEdited ? "editing" : ""}`;
 
       let resultadosHtml = "";
-      const rankedScores = getRankedEquipesForScores(bateria.scores || {})
-        .filter((eq) => eq.pontos > 0);
+      const rankedScores = getRankedEquipesForScores(bateria.scores || {});
 
       if (rankedScores.length > 0) {
+        let currentRank = 1;
+        let previousScore = null;
+
         rankedScores.forEach((eq, index) => {
-          const rankClass = index === 0 ? "rank-1" : index === 1 ? "rank-2" : index === 2 ? "rank-3" : "";
+          const currentScore = eq.pontos;
+
+          if (index === 0) {
+            previousScore = currentScore;
+          } else if (currentScore !== previousScore){
+            currentRank += 1
+            previousScore = currentScore;
+          }
+
+          const rankNumber = currentRank;
+          const rankClass = rankNumber === 1 ? "rank-1" : rankNumber === 2 ? "rank-2" : rankNumber === 3 ? "rank-3" : "";
+
           resultadosHtml += `
             <div class="hist-item-row">
-              <span><span class="position ${rankClass}">${index + 1}º</span> ${eq.name}:</span>
+              <span><span class="position ${rankClass}">${rankNumber}º</span> ${eq.name}:</span>
               <strong>${eq.pontos} pts</strong>
             </div>
           `;
@@ -235,6 +253,7 @@ function resetRegataForm() {
   btnSalvarRegata.textContent = "💾 Salvar Resultado da Bateria";
   btnSalvarRegata.style.backgroundColor = "#16a34a";
   btnCancelEdit.style.display = "none";
+  renderRegataTimesList();
 }
 
 btnCancelEdit.addEventListener("click", () => {
@@ -268,6 +287,7 @@ btnSalvarRegata.addEventListener("click", async () => {
 
   await db.collection("baterias").doc(docId).set(payload);
   resetRegataForm();
+  renderRegataTimesList();
 });
 
 window.removeEquipe = async (equipeId) => {
